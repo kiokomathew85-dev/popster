@@ -1,6 +1,6 @@
-function DarkModeToggle({ darkMode, setDarkMode }) {
+function DarkModeToggle({ darkMode, toggleDarkMode }) {
   return (
-    <button onClick={() => setDarkMode(!darkMode)}>
+    <button onClick={toggleDarkMode}>
       {darkMode ? "Toggle Light Mode" : "Toggle Dark Mode"}
     </button>
   );

@@ -1,78 +1,73 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import ProductList from "./components/ProductList";
+import DarkModeToggle from "./components/DarkModeToggle";
+import Cart from "./components/Cart";
 
-const PRODUCTS = [
-  { id: 1, name: "Apple", category: "Fruit" },
-  { id: 2, name: "Banana", category: "Fruit" },
-  { id: 3, name: "Carrot", category: "Vegetable" },
-  { id: 4, name: "Milk", category: "Dairy" }
+const sampleProducts = [
+  { id: 1, name: "Apple", category: "Fruits" },
+  { id: 2, name: "Banana", category: "Fruits" },
+  { id: 3, name: "Carrot", category: "Vegetables" },
+  { id: 4, name: "Milk", category: "Dairy" },
 ];
 
-export default function App() {
+function App() {
   const [darkMode, setDarkMode] = useState(false);
-  const [category, setCategory] = useState("All");
   const [cart, setCart] = useState([]);
+  const [category, setCategory] = useState("All");
 
-  // FILTER PRODUCTS
-  const filteredProducts =
-    category === "All"
-      ? PRODUCTS
-      : PRODUCTS.filter((p) => p.category === category);
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
-  // ADD TO CART
   const addToCart = (product) => {
     setCart([...cart, product]);
   };
 
+  const filteredProducts =
+    category === "All"
+      ? sampleProducts
+      : sampleProducts.filter(
+          (product) => product.category === category
+        );
+
   return (
     <div
       style={{
-        backgroundColor: darkMode ? "#111" : "#fff",
+        backgroundColor: darkMode ? "#222" : "#fff",
         color: darkMode ? "#fff" : "#000",
         minHeight: "100vh",
-        padding: "20px"
+        padding: "20px",
       }}
     >
       <h1>Shopping App</h1>
 
-      {/* DARK MODE BUTTON */}
-      <button onClick={() => setDarkMode(!darkMode)}>
-        {darkMode ? "Light Mode" : "Dark Mode"}
-      </button>
+      <DarkModeToggle
+        darkMode={darkMode}
+        toggleDarkMode={toggleDarkMode}
+      />
 
-      {/* CATEGORY FILTER */}
+      <br />
+      <br />
+
       <select
         aria-label="category"
         value={category}
         onChange={(e) => setCategory(e.target.value)}
       >
         <option value="All">All</option>
-        <option value="Fruit">Fruit</option>
-        <option value="Vegetable">Vegetable</option>
+        <option value="Fruits">Fruits</option>
+        <option value="Vegetables">Vegetables</option>
         <option value="Dairy">Dairy</option>
       </select>
 
-      {/* PRODUCTS */}
-      {filteredProducts.length === 0 ? (
-        <p>No products available</p>
-      ) : (
-        filteredProducts.map((product) => (
-          <div key={product.id}>
-            <p>{product.name}</p>
-            <button
-              data-testid={`product-${product.id}`}
-              onClick={() => addToCart(product)}
-            >
-              Add to Cart
-            </button>
-          </div>
-        ))
-      )}
+      <ProductList
+        products={filteredProducts}
+        addToCart={addToCart}
+      />
 
-      {/* CART */}
-      <h2>Cart</h2>
-      {cart.map((item, index) => (
-        <p key={index}>{item.name}</p>
-      ))}
+      <Cart cart={cart} />
     </div>
   );
 }
+
+export default App;
